@@ -49,8 +49,13 @@ foreach(name ${modeledit_NAMES})
   set(modeledit_HDRS ${modeledit_HDRS} ${name}.h)
   set(modeledit_UIS  ${modeledit_UIS}  ${name}.ui)
 endforeach()
- 
+
+IF ( QT_VERSION EQUAL "4" )
 qt4_wrap_ui(modeledit_SRCS ${modeledit_UIS})
 qt4_wrap_cpp(modeledit_SRCS ${modeledit_HDRS})
+ELSEIF ( QT_VERSION EQUAL "5" ) 
+qt5_wrap_ui(modeledit_SRCS ${modeledit_UIS})
+qt5_wrap_cpp(modeledit_SRCS ${modeledit_HDRS})
+ENDIF()
 
 add_library(modeledit ${modeledit_SRCS})

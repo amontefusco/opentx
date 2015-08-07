@@ -237,7 +237,11 @@ void FlightModePanel::update()
 void FlightModePanel::phaseName_editingFinished()
 {
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(sender());
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     strcpy(phase.name, lineEdit->text().toAscii());
+#else
+    strcpy(phase.name, lineEdit->text().toLatin1());
+#endif
     emit modified();
     emit nameModified();
 }
@@ -305,7 +309,7 @@ void FlightModePanel::GVName_editingFinished()
     QLineEdit *lineedit = qobject_cast<QLineEdit*>(sender());
     int gvar = lineedit->property("index").toInt();
     memset(&model->gvars_names[gvar], 0, sizeof(model->gvars_names[gvar]));
-    strcpy(model->gvars_names[gvar], lineedit->text().toAscii());
+    strcpy(model->gvars_names[gvar], lineedit->text().toLatin1());
     emit modified();
   }
 }

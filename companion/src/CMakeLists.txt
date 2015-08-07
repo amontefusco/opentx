@@ -10,6 +10,8 @@ MESSAGE(STATUS OpenTX Companion ${C9X_VERSION})
 
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
+SET(QT_VERSION "5")
+
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -62,6 +64,8 @@ ELSE()
     MESSAGE( "SDL not found! Joysticks support will be disabled. Simulator audio will not work." )
 ENDIF()
 
+IF ( QT_VERSION EQUAL "4" )
+
 FIND_PACKAGE(Qt4 4.8.4 REQUIRED)
 SET( QT_USE_QTNETWORK True )
 SET( QT_USE_QTXML True )
@@ -75,6 +79,44 @@ IF ( PHONON_FOUND )
     ADD_DEFINITIONS( -DPHONON )
 ELSE()
     MESSAGE( "PHONON not found!" )
+ENDIF()
+
+ELSEIF( QT_VERSION EQUAL "5" )
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC OFF)
+
+find_package(Qt5Core)
+get_target_property(Qt5Core_location Qt5::Core LOCATION)
+
+find_package(Qt5Widgets)
+get_target_property(Qt5Widgets_location Qt5::Widgets LOCATION)
+
+find_package(Qt5Xml)
+get_target_property(Qt5Xml_location Qt5::Xml LOCATION)
+
+find_package(Qt5PrintSupport)
+get_target_property(Qt5PrintSupport_location Qt5::PrintSupport LOCATION)
+
+find_package(Qt5LinguistTools)
+get_target_property(Qt5LinguistTools_location Qt5::LinguistTools LOCATION)
+
+find_package(Qt5Network)
+get_target_property(Qt5Network_location Qt5::Network LOCATION)
+
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${Qt5Xml_INCLUDE_DIRS})
+include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
+include_directories(${Qt5LinguistTools_INCLUDE_DIRS})
+include_directories(${Qt5Network_INCLUDE_DIRS})
+
+# Add compiler flags for building executables (-fPIE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+
+find_package(Phonon4Qt5)
+get_target_property(Phonon4Qt5_location phonon4qt5::Phonon4Qt5 LOCATION)
+
 ENDIF()
 
 MESSAGE( STATUS "Looking for QT lupdate " )
@@ -140,7 +182,11 @@ set(common_SRCS
   appdata.cpp
 )
 
+IF( QT_VERSION EQUAL "4" )
 qt4_wrap_cpp(common_SRCS)
+ELSEIF( QT_VERSION EQUAL "5" )
+qt5_wrap_cpp(common_SRCS)
+ENDIF()
 
 add_library(common ${common_SRCS})
 
@@ -290,10 +336,17 @@ FOREACH( language ${LANGUAGES} )
 ENDFOREACH( language )
 
 set( companion_SRCS ${companion_SRCS}  )
+IF( QT_VERSION EQUAL "4" )
 QT4_WRAP_UI( companion_SRCS ${companion_UIS} )
 QT4_WRAP_CPP( companion_SRCS ${companion_MOC_HDRS} )
 QT4_ADD_TRANSLATION( companion_QM ${companion_TS}  )
 QT4_ADD_RESOURCES( companion_SRCS ${companion_RCS} )
+ELSEIF( QT_VERSION EQUAL "5" )
+QT5_WRAP_UI( companion_SRCS ${companion_UIS} )
+QT5_WRAP_CPP( companion_SRCS ${companion_MOC_HDRS} )
+QT5_ADD_TRANSLATION( companion_QM ${companion_TS}  )
+QT5_ADD_RESOURCES( companion_SRCS ${companion_RCS} )
+ENDIF()
 
 ADD_DEFINITIONS( -DQT_TRANSLATIONS_DIR="${QT_TRANSLATIONS_DIR}" )
 
@@ -305,7 +358,11 @@ ELSE( )
     ADD_EXECUTABLE( ${COMPANION_NAME} WIN32 ${companion_SRCS} ${companion_QM} )
 ENDIF( )
 
+IF( QT_VERSION EQUAL "4" )
 target_link_libraries(${COMPANION_NAME} generaledit modeledit simulation common qcustomplot shared ${QT_LIBRARIES} ${QT_QTMAIN_LIBRARY} ${XERCESC_LIBRARY} ${PTHREAD_LIBRARY} ${SDL_LIBRARY} ${PHONON_LIBS})
+ELSEIF( QT_VERSION EQUAL "5" )
+target_link_libraries(${COMPANION_NAME} generaledit modeledit simulation common qcustomplot shared Qt5::Widgets Qt5::Gui Qt5::PrintSupport Qt5::Network Qt5::Xml ${PHONON_LIBS} ${XERCESC_LIBRARY} ${PTHREAD_LIBRARY} ${SDL_LIBRARY})
+ENDIF()
 
 ############# Standalone simu ###############
 
@@ -320,8 +377,14 @@ set(simu_MOC_HDRS
 )
 
 set( simu_SRCS ${simu_SRCS} )
+
+IF( QT_VERSION EQUAL "4" )
 qt4_wrap_cpp(simu_SRCS ${simu_MOC_HDRS} )
 qt4_add_resources(simu_SRCS companion.qrc) # TODO not needed
+ELSEIF( QT_VERSION EQUAL "5" )
+qt5_wrap_cpp(simu_SRCS ${simu_MOC_HDRS} )
+qt5_add_resources(simu_SRCS companion.qrc) # TODO not needed
+ENDIF()
 
 if(WIN32)
   set(simu_SRCS ${simu_SRCS} icon.rc)
@@ -333,7 +396,11 @@ else()
   add_executable(${SIMULATOR_NAME} WIN32 ${simu_SRCS})
 endif()
 
+IF( QT_VERSION EQUAL "4" )
 target_link_libraries(${SIMULATOR_NAME} simulation common ${QT_LIBRARIES} ${QT_QTMAIN_LIBRARY} ${PTHREAD_LIBRARY} ${SDL_LIBRARY} ${PHONON_LIBS} ${OPENTX_SIMULATOR_LIBS})
+ELSEIF( QT_VERSION EQUAL "5" )
+target_link_libraries(${SIMULATOR_NAME} simulation common Qt5::Widgets Qt5::PrintSupport Qt5::Network Qt5::Xml ${PTHREAD_LIBRARY} ${SDL_LIBRARY} ${PHONON_LIBS} ${OPENTX_SIMULATOR_LIBS})
+ENDIF()
 
 ############# Packaging ####################
 

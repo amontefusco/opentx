@@ -16,8 +16,13 @@
 #ifndef XCURSORWIDGET_H
 #define	XCURSORWIDGET_H
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QWidget>
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 class xcursorWidget : public QWidget {
 

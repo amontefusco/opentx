@@ -1,8 +1,13 @@
 #ifndef PRINTDIALOG_H
 #define PRINTDIALOG_H
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QDialog>
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 #include <QDir>
 #include "eeprominterface.h"
 #include "modelprinter.h"

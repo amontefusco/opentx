@@ -153,7 +153,11 @@ void ExpoDialog::valuesChanged()
     ed->swtch  = RawSwitch(ui->switchesCB->itemData(ui->switchesCB->currentIndex()).toInt());
     ed->mode   = ui->sideCB->currentIndex() + 1;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     strcpy(ed->name, ui->lineName->text().toAscii().data());
+#else
+    strcpy(ed->name, ui->lineName->text().toLatin1().data());
+#endif
     if (firmware->getCapability(VirtualInputs)) 
       inputName = ui->inputName->text();
 

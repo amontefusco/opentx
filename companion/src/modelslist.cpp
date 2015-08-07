@@ -42,6 +42,10 @@
 #include "modelslist.h"
 #include "mdichild.h"
 #include "helpers.h"
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QtWidgets>
+#endif
 
 class DragDropHeader {
   public:

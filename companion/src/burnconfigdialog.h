@@ -1,8 +1,13 @@
 #ifndef BURNCONFIGDIALOG_H_
 #define BURNCONFIGDIALOG_H_
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QDialog>
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 #define MEM_TYPE_EEPROM 1
 #define MEM_TYPE_FLASH  2

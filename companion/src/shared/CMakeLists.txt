@@ -16,7 +16,11 @@ set(shared_HDRS
   hexspinbox.h
   verticalscrollarea.h
 )
- 
+
+IF ( QT_VERSION EQUAL "4" )
 qt4_wrap_cpp(shared_SRCS ${shared_HDRS})
+ELSEIF ( QT_VERSION EQUAL "5" )
+qt5_wrap_cpp(shared_SRCS ${shared_HDRS})
+ENDIF()
 
 add_library(shared ${shared_SRCS})

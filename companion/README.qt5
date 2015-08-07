@@ -1,0 +1,25 @@
+#
+# Packages to be installed in order to build with Qt 5.x
+# (Test was made on Ubuntu 14.04)
+#
+sudo apt-get install git gcc-avr avr-libc avrdude build-essential ruby 
+sudo apt-get install g++ cmake libxerces-c-dev xsdcxx libsdl1.2-dev 
+sudo apt-get install libusb-1.0-0
+sudo apt-get install qtdeclarative5-dev qttools5-dev qttools5-dev-tools
+sudo apt-get install libphonon4qt5-4 libphonon4qt5-dev 
+sudo apt-get install libphonon4qt5experimental-dev
+
+
+# make home di current
+cd
+# clone repository
+git clone https://github.com/opentx/opentx opentx-qt5
+cd opentx-qt5
+# switch to branch for Qt5
+git checkout qt5
+cd companion
+mkdir lbuild
+cd lbuild
+# build
+cmake ../src && make clean && make && ./companion21
+

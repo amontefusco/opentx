@@ -2,6 +2,7 @@
 #include "ui_splashlibrary.h"
 #include "appdata.h"
 #include <QtGui>
+#include <QMessageBox>
 #include "helpers.h"
 #include "firmwareinterface.h"
 #include "helpers.h"

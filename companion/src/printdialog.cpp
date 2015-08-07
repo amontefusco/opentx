@@ -8,6 +8,10 @@
 #include <QImage>
 #include <QColor>
 #include <QPainter>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QPrinter>
+#include <QPrintDialog>
+#endif
 
 #if !defined WIN32 && defined __GNUC__
 #include <unistd.h>

@@ -160,8 +160,13 @@ void MixerDialog::valuesChanged()
     md->speedUp   = round(ui->slowUpSB->value()*scale);
 
     int i=0;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     for (i=0; i<ui->mixerName->text().toAscii().length(); i++) {
       md->name[i]=ui->mixerName->text().toAscii().at(i);
+#else
+    for (i=0; i<ui->mixerName->text().toLatin1().length(); i++) {
+      md->name[i]=ui->mixerName->text().toLatin1().at(i);
+#endif
     }
     md->name[i]=0;
     md->phases=0;

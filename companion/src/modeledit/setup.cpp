@@ -113,7 +113,11 @@ void TimerPanel::on_minuteBeep_toggled(bool checked)
 void TimerPanel::on_name_editingFinished()
 {
   int length = ui->name->maxLength();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   strncpy(timer.name, ui->name->text().toAscii(), length);
+#else
+  strncpy(timer.name, ui->name->text().toLatin1(), length);
+#endif
   emit modified();
 }
 
@@ -695,14 +699,14 @@ void SetupPanel::on_throttleSource_currentIndexChanged(int index)
 void SetupPanel::on_name_editingFinished()
 {
   int length = ui->name->maxLength();
-  strncpy(model->name, ui->name->text().toAscii(), length);
+  strncpy(model->name, ui->name->text().toLatin1(), length);
   emit modified();
 }
 
 void SetupPanel::on_image_currentIndexChanged(int index)
 {
   if (!lock) {
-    strncpy(model->bitmap, ui->image->currentText().toAscii(), 10);
+    strncpy(model->bitmap, ui->image->currentText().toLatin1(), 10);
     QString path = g.profile[g.id()].sdPath();
     path.append("/BMP/");
     QDir qd(path);

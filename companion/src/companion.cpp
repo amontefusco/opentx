@@ -38,7 +38,8 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
 #include <QTranslator>
 #include <QLocale>
@@ -46,6 +47,9 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QSplashScreen>
+#else
+#include <QtWidgets>
+#endif
 #include <QThread>
 #include <iostream>
 #if defined(JOYSTICKS) || defined(SIMU_AUDIO)
@@ -98,7 +102,9 @@ int main(int argc, char *argv[])
   app.installTranslator(&companionTranslator);
   app.installTranslator(&qtTranslator);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+#endif
 
 #if defined(JOYSTICKS) || defined(SIMU_AUDIO)
   uint32_t sdlFlags = 0;

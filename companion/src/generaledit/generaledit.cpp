@@ -1,6 +1,10 @@
 #include <QDateTime>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
 #include <QScrollArea>
+#else
+#include <QtWidgets>
+#endif
 #include "generaledit.h"
 #include "ui_generaledit.h"
 #include "helpers.h"
@@ -181,8 +185,13 @@ void GeneralEdit::on_calretrieve_PB_clicked()
         if (ok)
           generalSettings.imperial=byte8u;
         chars=CountrySet.mid(4,2);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         generalSettings.ttsLanguage[0]=chars[0].toAscii();
         generalSettings.ttsLanguage[1]=chars[1].toAscii();
+#else
+        generalSettings.ttsLanguage[0]=chars[0].toLatin1();
+        generalSettings.ttsLanguage[1]=chars[1].toLatin1();
+#endif
       }
     }
     else {

@@ -1,7 +1,12 @@
 #ifndef FLASHEEPROMDIALOG_H_
 #define FLASHEEPROMDIALOG_H_
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QDialog>
+#else
+#include <QtWidgets>
+#endif
 
 #define ER9X_EEPROM_FILE_TYPE          "ER9X_EEPROM_FILE"
 #define EEPE_EEPROM_FILE_HEADER        "EEPE EEPROM FILE"

@@ -499,12 +499,20 @@ void LogsDialog::on_fileOpen_BT_clicked()
         }
       }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       ui->logTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+#else
+      ui->logTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+#endif
       QVarLengthArray<int> sizes;
       for (int i = 0; i < ui->logTable->columnCount(); i++) {
         sizes.append(ui->logTable->columnWidth(i));
       }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       ui->logTable->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+#else
+      ui->logTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+#endif
       for (int i = 0; i < ui->logTable->columnCount(); i++) {
         ui->logTable->setColumnWidth(i, sizes.at(i));
       }

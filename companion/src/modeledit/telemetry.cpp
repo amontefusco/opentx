@@ -652,7 +652,11 @@ void TelemetrySensorPanel::updateSourcesComboBox(AutoComboBox * cb, bool negativ
 void TelemetrySensorPanel::on_name_editingFinished()
 {
   if (!lock) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     strcpy(sensor.label, ui->name->text().toAscii());
+#else
+    strcpy(sensor.label, ui->name->text().toLatin1());
+#endif
     emit nameModified();
     emit modified();
   }

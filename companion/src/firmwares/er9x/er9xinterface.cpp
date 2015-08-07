@@ -246,7 +246,11 @@ QDomElement Er9xInterface::getGeneralDataXML(QDomDocument * qdoc, Er9xGeneral * 
 {
   QDomElement gd = qdoc->createElement("GENERAL_DATA");
   appendNumberElement(qdoc, &gd, "Version", tgen->myVers, true); // have to write value here
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   appendTextElement(qdoc, &gd, "Owner", QString::fromAscii(tgen->ownerName,sizeof(tgen->ownerName)).trimmed());
+#else
+  appendTextElement(qdoc, &gd, "Owner", QString::fromLatin1(tgen->ownerName,sizeof(tgen->ownerName)).trimmed());
+#endif
   appendCDATAElement(qdoc, &gd, "Data", (const char *)tgen,sizeof(Er9xGeneral));
   return gd;
 }
@@ -256,7 +260,11 @@ QDomElement Er9xInterface::getModelDataXML(QDomDocument * qdoc, Er9xModelData * 
   QDomElement md = qdoc->createElement("MODEL_DATA");
   md.setAttribute("number", modelNum);
   appendNumberElement(qdoc, &md, "Version", mdver, true); // have to write value here
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   appendTextElement(qdoc, &md, "Name", QString::fromAscii(tmod->name,sizeof(tmod->name)).trimmed());
+#else
+  appendTextElement(qdoc, &md, "Name", QString::fromLatin1(tmod->name,sizeof(tmod->name)).trimmed());
+#endif
   appendCDATAElement(qdoc, &md, "Data", (const char *)tmod,sizeof(Er9xModelData));
   return md;
 }
@@ -274,7 +282,11 @@ bool Er9xInterface::loadGeneralDataXML(QDomDocument * qdoc, Er9xGeneral * tgen)
   while (!n.isNull()) {
     if (n.isCDATASection()) {
       QString ds = n.toCDATASection().data();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       QByteArray ba = QByteArray::fromBase64(ds.toAscii());
+#else
+      QByteArray ba = QByteArray::fromBase64(ds.toLatin1());
+#endif
       const char * data = ba.data();
       memcpy(tgen, data, sizeof(Er9xGeneral));
       break;
@@ -311,7 +323,11 @@ bool Er9xInterface::loadModelDataXML(QDomDocument * qdoc, Er9xModelData * tmod, 
   while (!n.isNull()) {
     if (n.isCDATASection()) {
       QString ds = n.toCDATASection().data();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       QByteArray ba = QByteArray::fromBase64(ds.toAscii());
+#else
+      QByteArray ba = QByteArray::fromBase64(ds.toLatin1());
+#endif
       const char * data = ba.data();
       memcpy(tmod, data, sizeof(Er9xModelData));
       break;

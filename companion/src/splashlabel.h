@@ -19,6 +19,7 @@
 #include <QLabel>
 #include <QWidget>
 #include <QtGui>
+#include <QtWidgets>
 
 class splashLabel : public QLabel
 {

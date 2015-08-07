@@ -1143,8 +1143,13 @@ GeneralSettings::GeneralSettings()
         if (ok)
           imperial=byte8u;
         QString chars=t_CountrySet.mid(4,2);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         ttsLanguage[0]=chars[0].toAscii();
         ttsLanguage[1]=chars[1].toAscii();
+#else
+        ttsLanguage[0]=chars[0].toLatin1();
+        ttsLanguage[1]=chars[1].toLatin1();
+#endif
       }
     }
   }

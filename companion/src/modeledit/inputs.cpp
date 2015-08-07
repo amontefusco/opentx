@@ -199,7 +199,11 @@ void InputsPanel::gm_openExpo(int index)
     if (g->exec())  {
       model->expoData[index] = mixd;
       if (firmware->getCapability(VirtualInputs))
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         strncpy(model->inputNames[mixd.chn], inputName.toAscii().data(), 4);
+#else
+        strncpy(model->inputNames[mixd.chn], inputName.toLatin1().data(), 4);
+#endif
       emit modified();
       update();
     }
@@ -289,7 +293,9 @@ void InputsPanel::mimeExpoDropped(int index, const QMimeData *data, Qt::DropActi
 }
 
 #include <iostream>
-#include <QtGui/qwidget.h>
+//#include <QtGui/qwidget.h>
+#include <QWidget>
+
 void InputsPanel::pasteExpoMimeData(const QMimeData * mimeData, int destIdx)
 {
   if (mimeData->hasFormat("application/x-companion-expo")) {

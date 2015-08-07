@@ -55,7 +55,11 @@ QString  ModelPrinter::printInputName(int idx)
   else {
     result = RawSource(SOURCE_TYPE_STICK, idx).toString(g_model);
   }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   return Qt::escape(result);
+#else
+  return result.QString::toHtmlEscaped();
+#endif
 }
 
 QString ModelPrinter::printInputLine(const ExpoData * ed)
@@ -69,27 +73,52 @@ QString ModelPrinter::printInputLine(const ExpoData * ed)
   }
 
   if (firmware->getCapability(VirtualInputs)) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     str += Qt::escape(ed->srcRaw.toString(g_model));
+#else
+    str += (ed->srcRaw.toString(g_model)).QString::toHtmlEscaped();
+#endif
   }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   str += " " + Qt::escape(QObject::tr("Weight")) + QString("(%1)").arg(getGVarString(ed->weight,true));
   if (ed->curve.value) str += " " + Qt::escape(ed->curve.toString());
+#else
+  str += " " + (QObject::tr("Weight")) + QString("(%1)").arg(getGVarString(ed->weight,true)).QString::toHtmlEscaped();
+  if (ed->curve.value) str += " " + (ed->curve.toString()).QString::toHtmlEscaped();
+#endif
 
   QString phasesStr = printPhases(ed->phases);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   if (!phasesStr.isEmpty()) str += " " + Qt::escape(phasesStr);
+#else
+  if (!phasesStr.isEmpty()) str += " " + phasesStr.QString::toHtmlEscaped();
+#endif
 
   if (ed->swtch.type != SWITCH_TYPE_NONE) 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     str += " " + Qt::escape(QObject::tr("Switch") + QString("(%1)").arg(ed->swtch.toString()));
+#else
+    str += " " + (QObject::tr("Switch") + QString("(%1)").arg(ed->swtch.toString())).QString::toHtmlEscaped();
+#endif
 
 
   if (firmware->getCapability(VirtualInputs)) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     if (ed->carryTrim>0) str += " " + Qt::escape(QObject::tr("NoTrim"));
     else if (ed->carryTrim<0) str += " " + Qt::escape(RawSource(SOURCE_TYPE_TRIM, (-(ed->carryTrim)-1)).toString(g_model));
+#else
+    if (ed->carryTrim>0) str += " " + (QObject::tr("NoTrim")).QString::toHtmlEscaped();
+    else if (ed->carryTrim<0) str += " " + (RawSource(SOURCE_TYPE_TRIM, (-(ed->carryTrim)-1)).toString(g_model)).QString::toHtmlEscaped();
+#endif
   }
 
   if (firmware->getCapability(HasExpoNames) && ed->name[0]) 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     str += Qt::escape(QString(" [%1]").arg(ed->name));
-
+#else
+    str += (QString(" [%1]").arg(ed->name)).QString::toHtmlEscaped();
+#endif
   return str;
 }
 
@@ -107,7 +136,11 @@ QString ModelPrinter::printMixerName(int curDest)
     name.append("        ");
     str += name.left(8);
   }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   return Qt::escape(str);
+#else
+  return str.QString::toHtmlEscaped();
+#endif
 }
 
 QString ModelPrinter::printMixerLine(const MixData * md, int highlightedSource)
@@ -121,40 +154,83 @@ QString ModelPrinter::printMixerLine(const MixData * md, int highlightedSource)
   };
 
   // highlight source if needed
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   QString source = Qt::escape(md->srcRaw.toString(g_model));
+#else
+  QString source = (md->srcRaw.toString(g_model)).QString::toHtmlEscaped();
+#endif
   if ( (md->srcRaw.type == SOURCE_TYPE_CH) && (md->srcRaw.index+1 == (int)highlightedSource) ) {
     source = "<b>" + source + "</b>";
   }
   str += "&nbsp;" + source;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   str += " " + Qt::escape(QObject::tr("Weight")) + QString("(%1)").arg(getGVarString(md->weight, true));
+#else
+  str += " " + (QObject::tr("Weight")) + QString("(%1)").arg(getGVarString(md->weight, true)).QString::toHtmlEscaped();
+#endif
 
   QString phasesStr = printPhases(md->phases);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   if (!phasesStr.isEmpty()) str += " " + Qt::escape(phasesStr);
+#else
+  if (!phasesStr.isEmpty()) str += " " + phasesStr.QString::toHtmlEscaped();
+#endif
 
   if (md->swtch.type != SWITCH_TYPE_NONE) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     str += " " + Qt::escape(QObject::tr("Switch")) + QString("(%1)").arg(md->swtch.toString());
+#else
+    str += " " + (QObject::tr("Switch")) + QString("(%1)").arg(md->swtch.toString()).QString::toHtmlEscaped();
+#endif
   }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   if (md->carryTrim>0)      str += " " + Qt::escape(QObject::tr("NoTrim"));
+#else
+  if (md->carryTrim>0)      str += " " + QObject::tr("NoTrim").QString::toHtmlEscaped();
+#endif
   else if (md->carryTrim<0) str += " " + RawSource(SOURCE_TYPE_TRIM, (-(md->carryTrim)-1)).toString(g_model);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   if (firmware->getCapability(HasNoExpo) && md->noExpo) str += " " + Qt::escape(QObject::tr("No DR/Expo"));
   if (md->sOffset)     str += " " + Qt::escape(QObject::tr("Offset")) + QString("(%1)").arg(getGVarString(md->sOffset));
   if (md->curve.value) str += " " + Qt::escape(md->curve.toString());
+#else
+  if (firmware->getCapability(HasNoExpo) && md->noExpo) str += " " + (QObject::tr("No DR/Expo")).QString::toHtmlEscaped();
+  if (md->sOffset)     str += " " + (QObject::tr("Offset")) + QString("(%1)").arg(getGVarString(md->sOffset)).QString::toHtmlEscaped();
+  if (md->curve.value) str += " " + (md->curve.toString()).QString::toHtmlEscaped();
+#endif
 
   int scale = firmware->getCapability(SlowScale);
   if (scale == 0)
     scale = 1;
   if (md->delayDown || md->delayUp)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     str += " " + Qt::escape(QObject::tr("Delay")) + QString("(u%1:d%2)").arg((double)md->delayUp/scale).arg((double)md->delayDown/scale);
+#else
+    str += " " + (QObject::tr("Delay")) + QString("(u%1:d%2)").arg((double)md->delayUp/scale).arg((double)md->delayDown/scale).QString::toHtmlEscaped();
+#endif
   if (md->speedDown || md->speedUp)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     str += " " + Qt::escape(QObject::tr("Slow")) + QString("(u%1:d%2)").arg((double)md->speedUp/scale).arg((double)md->speedDown/scale);
+#else
+    str += " " + (QObject::tr("Slow")) + QString("(u%1:d%2)").arg((double)md->speedUp/scale).arg((double)md->speedDown/scale).QString::toHtmlEscaped();
+#endif
   if (md->mixWarn)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     // str += Qt::escape(QObject::tr(" Warn(%1)").arg(md->mixWarn));
     str += " " + Qt::escape(QObject::tr("Warn")) + QString("(%1)").arg(md->mixWarn);
+#else
+    // str += QString::toHtmlEscaped(QObject::tr(" Warn(%1)").arg(md->mixWarn));
+    str += " " + (QObject::tr("Warn")) + QString("(%1)").arg(md->mixWarn).QString::toHtmlEscaped();
+#endif
   if (firmware->getCapability(HasMixerNames) && md->name[0]) 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     str += Qt::escape(QString(" [%1]").arg(md->name));
+#else
+    str += (QString(" [%1]").arg(md->name)).QString::toHtmlEscaped();
+#endif
   return str;
 }
 

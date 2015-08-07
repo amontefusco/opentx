@@ -37,10 +37,10 @@ bool Joystick::open(int stick)
     numHats = SDL_JoystickNumHats(joystick);
     numTrackballs = SDL_JoystickNumBalls(joystick);
     joystickTimer.start(eventTimeout);
-    return TRUE;
+    return true;
   } else {
     fprintf(stderr, "ERROR: couldn't open SDL joystick #%d", stick);
-    return FALSE;
+    return false;
   }
 }
 

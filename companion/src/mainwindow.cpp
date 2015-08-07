@@ -1166,6 +1166,13 @@ void MainWindow::createMenus()
     helpMenu->addAction(fwchangelogAct);
     helpMenu->addSeparator();
     helpMenu->addAction(contributorsAct);
+//
+// needed on Linux/Ubuntu in order to get the menu displayes
+// see https://forum.qt.io/topic/7276/menu-not-showing-up-in-menubar/7
+//
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    menuBar()->setNativeMenuBar(false);
+#endif
 }
  
 QMenu *MainWindow::createRecentFileMenu()

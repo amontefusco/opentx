@@ -44,7 +44,11 @@ class AutoLineEdit: public QLineEdit
     void onEdited()
     {
       if (field && !lock) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         strcpy(field, text().toAscii());
+#else
+        strcpy(field, text().toLatin1());
+#endif
         if (panel) {
           emit panel->modified();
         }

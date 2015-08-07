@@ -316,7 +316,11 @@ void GeneralSetupPanel::on_voiceLang_CB_currentIndexChanged(int index)
   if (!lock) {
     QString code = ui->voiceLang_CB->itemData(index).toString();
     for (int i=0; i<2; i++) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       generalSettings.ttsLanguage[i] = code.at(i).toAscii();
+#else
+      generalSettings.ttsLanguage[i] = code.at(i).toLatin1();
+#endif
     }
     generalSettings.ttsLanguage[2] = '\0';
     emit modified();

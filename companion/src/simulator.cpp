@@ -100,8 +100,11 @@ int main(int argc, char *argv[])
   app.installTranslator(&companionTranslator);
   app.installTranslator(&qtTranslator);
 */
-
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+#else
+  // TO BE CHECKED in Qt5
+#endif
 
 #if defined(JOYSTICKS) || defined(SIMU_AUDIO)
   uint32_t sdlFlags = 0;
@@ -124,7 +127,8 @@ int main(int argc, char *argv[])
   registerSimulators();
   registerOpenTxFirmwares();
 
-  eedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation));
+  //eedir = QDir(QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation));
+  eedir = QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   if (!eedir.exists("OpenTX")) {
     eedir.mkdir("OpenTX");
   }
@@ -158,7 +162,7 @@ int main(int argc, char *argv[])
     }
     current_firmware_variant = GetFirmware(firmwareId);
     eepromFileName = QString("eeprom-%1.bin").arg(radioId);
-    eepromFileName = eedir.filePath(eepromFileName.toAscii());
+    eepromFileName = eedir.filePath(eepromFileName.toLatin1());
     SimulatorFactory *factory = getSimulatorFactory(firmwareId);
     if (factory->type() == BOARD_TARANIS)
       dialog = new SimulatorDialogTaranis(NULL, factory->create(), SIMULATOR_FLAGS_S1|SIMULATOR_FLAGS_S2);
@@ -170,7 +174,7 @@ int main(int argc, char *argv[])
   }
 
   dialog->show();
-  dialog->start(eepromFileName.toAscii().constData());
+  dialog->start(eepromFileName.toLatin1().constData());
 
   int result = app.exec();
 

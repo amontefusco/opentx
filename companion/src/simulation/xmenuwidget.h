@@ -16,8 +16,13 @@
 #ifndef XMENUWIDGET_H
 #define	XMENUWIDGET_H
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QWidget>
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 class xmenuWidget : public QWidget {
 

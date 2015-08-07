@@ -8,8 +8,12 @@
 #include "joystick.h"
 #include "joystickdialog.h"
 #endif
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QDesktopServices>
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 AppPreferencesDialog::AppPreferencesDialog(QWidget *parent) :
   QDialog(parent),

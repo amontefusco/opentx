@@ -1,9 +1,16 @@
 #ifndef COMPAREDIALOG_H
 #define COMPAREDIALOG_H
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QDialog>
 #include <QtGui>
 #include <QDir>
+#else
+#include <QtWidgets>
+#include <QPrinter>
+#include <QPrintDialog>
+#endif
 #include "eeprominterface.h"
 #include "modelprinter.h"
 

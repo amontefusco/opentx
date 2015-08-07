@@ -53,7 +53,12 @@ include_directories(
   ${RADIO_SRC_DIRECTORY}/fonts/std
 )
 
+IF ( QT_VERSION EQUAL "4" )
 qt4_wrap_ui(simulation_SRCS ${simulation_UIS})
 qt4_wrap_cpp(simulation_SRCS ${simulation_HDRS})
+ELSEIF ( QT_VERSION EQUAL "5" )
+qt5_wrap_ui(simulation_SRCS ${simulation_UIS})
+qt5_wrap_cpp(simulation_SRCS ${simulation_HDRS})
+ENDIF()
 
 add_library(simulation ${simulation_SRCS})

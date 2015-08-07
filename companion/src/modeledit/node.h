@@ -42,7 +42,12 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 #define DEFAULT_BALL_SIZE 10
 #define BALL_HEIGHT 2
